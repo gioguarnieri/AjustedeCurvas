@@ -21,11 +21,11 @@ while(cont<=2*n):
   somaxy=(i*j)**cont
  cont2=cont
  cont3=0
- while(cont2+cont3<=cont):
+ while(cont2>=0):
   mat.itemset((cont2,cont3),somax)
   cont3=cont3+1
   cont2=cont2-1
  cont=cont+1
- print cont
+ print mat
 
 print mat
