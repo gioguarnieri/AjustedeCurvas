@@ -25,12 +25,12 @@ def GeraMatriz():
 
 
  for ii in xrange(0,n+1):
-  for jj in xrange(0,n+1):
-   if(ii>=jj):
-    somax=0
-    for i,j in zip(x,y):
-     somax=somax+i**(ii+jj)
-    mat.itemset((ii,jj),somax)
+  for jj in xrange(0,ii+1):
+#   if(ii>=jj):
+   somax=0
+   for i,j in zip(x,y):
+    somax=somax+i**(ii+jj)
+   mat.itemset((ii,jj),somax)
  for ii in xrange(0,n+1):
   for jj in xrange(ii,n+1):
    mat.itemset((ii,jj),mat.item(jj,ii))
