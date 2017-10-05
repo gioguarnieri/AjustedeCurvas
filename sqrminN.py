@@ -11,9 +11,11 @@ def GeraMatriz():
  fileread=open(sys.argv[1],'r')
  x=[]
  y=[]
- vet=[]
+ vet=np.zeros((n+1,2), float)
  mat=np.zeros((n+1,n+1), float)
-  
+ 
+ for i in xrange(0, n+1):
+  vet.itemset((i,1), i)
 
  for line in fileread:
   x1,y1=line.split()
@@ -35,8 +37,8 @@ def GeraMatriz():
  for cont in xrange(0,n+1):
   sumxy=0
   for i,j in zip(x,y):
-   sumxy=sumxy+(i*j)**cont
-  vet.append(sumxy)
+   sumxy=sumxy+i**cont*j
+  vet.itemset((cont,0),sumxy)
  return mat,vet
 
 
@@ -54,12 +56,12 @@ def Escalona(x,resp):
     y=np.copy(x[tt])
     x[tt]=np.copy(x[t])
     x[t]=np.copy(y)
-    segura=resp2[tt]
-    resp2[tt]=resp2[t]
-    resp2[t]=segura
+    segura=np.copy(resp2[tt])
+    resp2[tt]=np.copy(resp2[t])
+    resp2[t]=np.copy(segura)
    op=op+2+n
    lamda.append(x.item(t,tt)/x.item(tt,tt))
-   resp2[t]=resp2[t]-lamda[-1]*resp2[tt]
+   resp2.itemset((t,0), resp2.item(t,0)-lamda[-1]*resp2.item(tt,0))
    x[t]=np.copy(x[t]-lamda[-1]*x[tt])
  return x,moddet,lamda,op,resp2
 
@@ -73,13 +75,13 @@ def CalculoDet(x):
 
 
 def Substitui(x,resp2):
- y=resp2
+ y=np.copy(resp2)
  for i in xrange(n,-1,-1):
   j=n
   while (j>i):
-   y[i]=y[i]-x.item(i,j)*y[j]
+   y.itemset((i,0),y.item(i,0)-x.item(i,j)*y.item(j,0))
    j=j-1
-  y[i]=y[i]/x.item(i,i)
+  y.itemset((i,0),y.item(i,0)/x.item(i,i))
  return y
 
 
@@ -88,7 +90,7 @@ def Coeficientes(z,y):
  w=np.zeros([n+1], float)
  for tt in xrange(0,n+1):
   for t in xrange(0,n+1):
-   w[tt]=np.copy(w[tt]+y[t]*z.item(tt,t))
+   w[tt]=np.copy(w[tt]+y.item(t,0)*z.item(tt,t))
  return w
 
 
@@ -97,22 +99,21 @@ def Coeficientes(z,y):
 n=int(sys.argv[2])
 mat,vet=GeraMatriz()
 z=np.copy(mat)
-print z
+#print z
 mat,moddet,l,op,resp2=Escalona(mat,vet)
-print mat
+#print mat
 det=CalculoDet(mat)
-print resp2
+#print resp2
 y=Substitui(mat,resp2)
-print "Valores de y: "
-print y
+print "Valores dos coeficientes: "
+for i in xrange(n,-1,-1):
+ print "A" + str(int(y.item(i,1)))+ "=" + str(y.item(i,0))
+ 
 w=Coeficientes(z,y)
 w=[round(elem,2) for elem in w]
-vet=[round(elem,2) for elem in vet]
 
-print "Valores de W: "
-print w
-print "Valores de vet: "
-print vet
-print "Os coeficientes são iguais o vetor?"
-print w==vet
+#print "Valores de W: "
+#print w
+#print "Valores de vet: "
+#print vet
 
